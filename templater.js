@@ -1,28 +1,14 @@
 var Templater = {
 	body: document.getElementsByTagName('body')[0],
+	btnTemplate: '<button class="btn btn-default" type="submit">Some Text</button>',
 	run: function() {
 		var bootstrapButtonsArr = this.findElements();
-		for (let i = 0; i < bootstrapButtonsArr.length; i++) {
-			this.addElement(this.body, this.createElement());
+		for (let i = 0; i < bootstrapButtonsArr.length;) {
+			bootstrapButtonsArr[i].outerHTML = this.btnTemplate;
 		}
-		this.deleteElements(bootstrapButtonsArr);
 	},
 	findElements: function () {
 		return document.getElementsByTagName('bootstrap_button');
-	},
-	createElement: function() {
-		var btn = document.createElement('button');
-		btn.className = 'btn btn-default';
-		btn.innerHTML = 'Some Text';
-		return btn;
-	},
-	addElement: function(parent, element) {
-		parent.appendChild(element);
-	},
-	deleteElements: function(elemArr){
-		while (elemArr.length > 0) {
-			elemArr[elemArr.length - 1].remove();
-		}
 	}
 }
 
