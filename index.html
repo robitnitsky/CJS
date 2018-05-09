@@ -6,6 +6,12 @@
     <bootstrap_button class="btn btn-default some-class" type="submit" >
       Some Text
     </bootstrap_button>
+    <bootstrap_button class="btn btn-default some-anoter-class" type="submit" >
+        <span>Some Text</span>
+      </bootstrap_button>
+      <bootstrap_link class="btn btn-link btn-default link-class" href="#example" >
+        <span>Some Text</span>
+      </bootstrap_link>
     <script src="templater.js"></script>
     <script>
         Templater.addTag(
@@ -13,6 +19,12 @@
             '<button class="{{class}}" type="{{type}}">' +
             '{{html}}' +
             '</button>'
+        );
+        Templater.addTag(
+            'bootstrap_link',
+            '<a class="{{class}}" href="{{href}}">' +
+            '{{html}}' +
+            '</a>'
         );
         Templater.run();
     </script>
