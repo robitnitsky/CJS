@@ -9,7 +9,7 @@
     <bootstrap_button class="btn btn-default some-anoter-class" type="submit" >
         <span>Some Text</span>
       </bootstrap_button>
-      <bootstrap_link class="btn btn-link btn-default link-class" href="#example" >
+      <bootstrap_link class="btn btn-link btn-default link-class" href="#example" id="link">
         <span>Some Text</span>
       </bootstrap_link>
     <script src="templater.js"></script>
@@ -22,7 +22,7 @@
         );
         Templater.addTag(
             'bootstrap_link',
-            '<a class="{{class}}" href="{{href}}">' +
+            '<a class="{{class}}" href="{{href}}" id="{{id}}">' +
             '{{html}}' +
             '</a>'
         );

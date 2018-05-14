@@ -1,6 +1,5 @@
-
 // создал объект для локализации свойств и методов
-var Templater = {
+let Templater = {
 	// объект для хранения добавляемых темплейтов
 	templates: {},
 	//массив для хранения кастомных элементов преобразованных из HTML коллекции
@@ -15,7 +14,9 @@ var Templater = {
 	//метод для поиска я кастомных элементов на странице
 	findElements: function (tag) {
 		//сразу преодбразую HTMLCollection в массив, чтобы в дальнейшем пользоваться методами Array
-		this.elements = Array.prototype.slice.call(document.getElementsByTagName(tag));
+		for (let i = 0; i < Array.prototype.slice.call(document.getElementsByTagName(tag)).length; i++) {
+			this.elements.push(Array.prototype.slice.call(document.getElementsByTagName(tag))[i]);
+		}
 	},
 	//метод для добавления тэгов бутстрап
 	addTag: function (tag, template) {
@@ -27,19 +28,34 @@ var Templater = {
 	//метод для преобразования шаблона в валидный HTML элемент
 	render: function (templates, elements) {
 		//чтобы заменить outerHTML каждого элемента прохожусь по ним циклом
-		elements.forEach(function(element) {
-			//в цикле, используя атрибуты конкретного элемента генерирую RegExp для замены в шаблоне
-			let renderedElement = (function(){
-				//временая переменная со всеми атрибутами конкретного элемента
-				let elementAttributes = Array.prototype.slice.call(element.attributes);
-				//временная переменная для формирования обозначения темплейта, который мы преобразуем, чтобы не писать длинное выражение обращения свойству объекта
-				var renderedTemplate = templates[element.tagName.toLowerCase()]
-				//в цикле по атрибутам элемента, используя имя атрибута, генерирую RegExp для замены
-				for (let i = 0; i < elementAttributes.length; i++) {
+		elements.forEach(function (element) {
+			//временная переменная для формирования обозначения темплейта, который мы преобразуем, чтобы не писать длинное выражение обращения свойству объекта
+			let renderedTemplate = templates[element.tagName.toLowerCase()];
+			// формируем RegExp для поисков параметров в шаблоне
+			let regExp = /\{\{(\w+?)\}\}/ig;
+			// служебная переменная для результатов метода .exec
+			let execResultsArray;
+			// переменная для хранения всех параметров шаблона в виде строки без скобок
+			let templateParameters = [];
+			// цикл для извлечения параметров шаблона из строки шаблона
+			while ((execResultsArray = regExp.exec(renderedTemplate)) !== null) {
+				// записываем в массив параметров шаблона подстроку совпадения (из круглых скобок),
+				// чтобы избавиться от {{...}}
+				templateParameters.push(execResultsArray[1]);
+			}
+			//получаю строку валидного HTML для последующей замены
+			let renderedElement = (function () {
+				//в цикле по параметрам шаблона, используя имя параметра, генерирую строку для замены
+				for (let i = 0; i < templateParameters.length; i++) {
 					//переменная, чтобы не писать длинное выражение в replace()
-					let tempReg = '{{'+elementAttributes[i].name+'}}';
+					let tempStr = '{{' + templateParameters[i] + '}}';
 					// в цикле по очереди заменяю атрибуты темплейта на реальные аттрибуты
-					renderedTemplate = renderedTemplate.replace(tempReg, elementAttributes[i].nodeValue);
+					// также нужно исключить строку {{html}} так как нет такого атрибута 'html'
+					if (templateParameters[i] !== 'html') {
+						renderedTemplate = renderedTemplate.replace(tempStr, element.getAttribute(templateParameters[i]));
+					} else {
+						renderedTemplate = renderedTemplate.replace(tempStr, element.innerHTML);
+					}
 				}
 				//возвращаю готовый HTML в виде строки для последующей замены
 				return renderedTemplate;
