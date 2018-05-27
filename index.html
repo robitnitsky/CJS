@@ -1,32 +1,32 @@
 <html>
 <head>
-    <title>Stage 3</title>
+    <title>Stage 4</title>
 </head>
 <body>
-    <bootstrap_button class="btn btn-default some-class" type="submit" >
-      Some Text
-    </bootstrap_button>
-    <bootstrap_button class="btn btn-default some-anoter-class" type="submit" >
-        <span>Some Text</span>
-      </bootstrap_button>
-      <bootstrap_link class="btn btn-link btn-default link-class" href="#example" id="link">
-        <span>Some Text</span>
-      </bootstrap_link>
-    <script src="templater.js"></script>
+    <section id="bootstrap-templates">
+      <button type="submit" class="some-class">
+        Bootstrap Button
+      </button>
+    </section>
+    <section id="foundation-templates">
+      <button type="submit" class="some-class">
+        Foundation Button
+      </button>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="templater.jq.js"></script>
     <script>
-        Templater.addTag(
-            'bootstrap_button',
-            '<button class="{{class}}" type="{{type}}">' +
-            '{{html}}' +
-            '</button>'
-        );
-        Templater.addTag(
-            'bootstrap_link',
-            '<a class="{{class}}" href="{{href}}" id="{{id}}">' +
-            '{{html}}' +
-            '</a>'
-        );
-        Templater.run();
+      $('#bootstrap-templates').templater({
+        tags: {
+          'button': '<button class="btn btn-default {{class}}" type="{{type}}">{{html}}</button>'
+        }
+      });
+
+      $('#foundation-templates').templater({
+        tags: {
+          'button': '<button class="button {{class}}" type="{{type}}">{{html}}</button>'
+        }
+      }); 
     </script>
-</body>
+  </body>
 </html>

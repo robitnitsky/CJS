@@ -12,7 +12,7 @@ let Templater = {
 			}
 		}
 	},
-	//метод для поиска я кастомных элементов на странице
+	//метод для поиска кастомных элементов на странице
 	findElements: function (tag) {
 		return Array.prototype.slice.call(document.getElementsByTagName(tag));
 	},
