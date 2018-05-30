@@ -4,6 +4,7 @@
         init (elements, options) {
             let tags = options.tags;
             this.output(elements, tags);
+            this.output(elements, tags);
         },
         getTemplateParameters (template) {
             let regExp = /\{\{(\w+?)\}\}/ig;
@@ -14,13 +15,19 @@
             }
             return templateParameters;
         },
+        isHTML (str) {
+            let tagReg = /<(.|\n)*?>/;
+            return tagReg.test(str);
+        },
         render (templateParameters, renderedTemplate, element) {
             for (let i = 0; i < templateParameters.length; i++) {
                 let tempStr = '{{' + templateParameters[i] + '}}';
                 if (templateParameters[i] !== 'html') {
                     renderedTemplate = renderedTemplate.replace(tempStr, element.getAttribute(templateParameters[i]));
-                } else {
+                } else if (methods.isHTML(element.innerHTML)) {
                     renderedTemplate = renderedTemplate.replace(tempStr, element.innerHTML);
+                } else {
+                    renderedTemplate = renderedTemplate.replace(tempStr, element.textContent);
                 }
             }
             return renderedTemplate;
@@ -31,11 +38,10 @@
         output (elements, tags) {
             for (key in tags) {
                 let elementsHtml = elements.find(key);
-
-                for (let i = 0; i < elementsHtml.length; i++) {
+                elementsHtml.each(function(){
                     let templateParameters = methods.getTemplateParameters(tags[key]);
-                    methods.replace(elementsHtml[i], methods.render(templateParameters, tags[key], elementsHtml[i]));
-                }
+                    methods.replace(this, methods.render(templateParameters, tags[key], this));
+                })
             }
         }
     }
